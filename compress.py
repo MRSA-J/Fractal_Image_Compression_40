@@ -27,4 +27,5 @@ if __name__ == '__main__':
     start = time.time()
     encoder.encodeImage(imagePath)
     print("Elapsed time : {0}\n".format(time.time() - start))
+    print("test")
 
