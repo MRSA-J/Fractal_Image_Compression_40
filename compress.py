@@ -6,6 +6,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.ndimage as ndimage
 
+
+'''
+Author: Chen Wei & Lin Yu
+- Code modified from:
+
+'''
 angles = [0, 90, 180, 270]
 directions = [1, -1]
 

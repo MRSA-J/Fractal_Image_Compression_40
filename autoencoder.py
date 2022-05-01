@@ -13,11 +13,15 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 
-
-
 '''
-This is an VAE trained on MNIST, which can also performs image compression.
-
+# @Author: Chen Wei
+# - Code modified from tutorial: https://medium.com/dataseries/variational-autoencoder-with-pytorch-2d359cbf027b
+# - Idea: This is an VAE trained on MNIST, which can also performs image compression.
+# - Disclaimer: the reason I use MNIST as dataset is that we don't need to collect extra data, the disadvantage of this
+# is the dimension of the layers of CNN need to be modified if we wants to perform the vae we trained to reconstruct a 
+# RGB image. i.e. need to change input channel to 3 
+# - Although not being part of the fractal image compression, the reason why I include VAE here is that we could do some 
+# comparison based on different model
 '''
 data_dir = "data"
 

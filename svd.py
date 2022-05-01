@@ -7,8 +7,10 @@ IMAGE_HEIGHT = 512
 
 '''
 # @Author: Chen Wei
-# Code modified from tutorial: https://www.youtube.com/watch?v=SU851ljMIZ8
-# Idea: Doing SVD on each channel separately, and merge them together
+# - Code modified from tutorial: https://www.youtube.com/watch?v=SU851ljMIZ8
+# - Idea: Doing SVD on each channel separately, and merge them together
+# - Although not being part of the fractal image compression, the reason why I include SVD here is that we could do some 
+# comparison based on different model
 '''
 def rgb_image(image_path):
     image = Image.open(image_path)
