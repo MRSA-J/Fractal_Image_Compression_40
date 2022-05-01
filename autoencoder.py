@@ -12,6 +12,13 @@ from torch import nn
 import torch.nn.functional as F
 import torch.optim as optim
 
+
+
+
+'''
+This is an VAE trained on MNIST, which can also performs image compression.
+
+'''
 data_dir = "data"
 
 train_dataset = torchvision.datasets.MNIST(data_dir, train=True, download=True)
@@ -133,6 +140,8 @@ class VariationalAutoencoder(nn.Module):
         return self.reconstruction_loss(x, x_hat) + self.kl_loss()
 
 
+
+
 ### Training function
 def train_epoch(vae, device, dataloader, optimizer):
     # Set train mode for both the encoder and the decoder
@@ -202,9 +211,6 @@ def plot_ae_outputs(encoder,decoder,n=10):
       ax.get_yaxis().set_visible(False)
       if i == n//2:
          ax.set_title('Reconstructed images')
-
-        # Todo: add plot of latent dimension
-
     plt.show()
 
 def show_image(img):
@@ -226,6 +232,31 @@ def eval_image(vae):
         show_image(torchvision.utils.make_grid(img_recon.data[:100], 10, 5))
         plt.show()
 
+def plot_latent(encoder,decoder,n=10):
+    plt.figure(figsize=(16, 4.5))
+    targets = test_dataset.targets.numpy()
+    t_idx = {i: np.where(targets == i)[0][0] for i in range(n)}
+    for i in range(n):
+        ax = plt.subplot(2, n, i + 1)
+        img = test_dataset[t_idx[i]][0].unsqueeze(0).to(device)
+        encoder.eval()
+        decoder.eval()
+        with torch.no_grad():
+        #    rec_img = decoder(encoder(img))
+            latent_img = encoder(img)  # here is the compressed image
+        plt.imshow(img.cpu().squeeze().numpy(), cmap='gist_gray')
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
+        if i == n // 2:
+            ax.set_title('Original images')
+
+        ax = plt.subplot(2, n, i + 1 + n)
+        plt.imshow(latent_img.cpu().squeeze().numpy(), cmap='gist_gray')
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
+        if i == n // 2:
+            ax.set_title('Latent images')
+    plt.show()
 
 if __name__ == "__main__":
     torch.manual_seed(0)
@@ -243,10 +274,18 @@ if __name__ == "__main__":
 
     num_epochs = 50
 
-    for epoch in range(num_epochs):
-        train_loss = train_epoch(vae, device, train_loader, optim)
-        val_loss = test_epoch(vae, device, valid_loader)
+    # Train
+    # for epoch in range(num_epochs):
+    #     train_loss = train_epoch(vae, device, train_loader, optim)
+    #     val_loss = test_epoch(vae, device, valid_loader)
+    #
+    #     print('\n EPOCH {}/{} \t train loss {:.3f} \t val loss {:.3f}'.format(epoch + 1, num_epochs, train_loss,
+    #                                                                           val_loss))
+    #     plot_ae_outputs(vae.encoder, vae.decoder, n=10)
+    # torch.save(vae.state_dict(), "model/vae_mnist.pth")
 
-        print('\n EPOCH {}/{} \t train loss {:.3f} \t val loss {:.3f}'.format(epoch + 1, num_epochs, train_loss,
-                                                                              val_loss))
-        plot_ae_outputs(vae.encoder, vae.decoder, n=10)
+
+    # Evalutate
+    vae.load_state_dict(torch.load("model/vae_mnist.pth"))
+   # plot_latent(vae.encoder, vae.decoder, n=10)
+   # Todo: modify it so it can plot latent
