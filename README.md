@@ -1,16 +1,16 @@
 # Math_40_Final_Project
 
 
-## Fractal Image Compression
+## Fractal Image Compression Introduction
 - Paper: Yuval Fisher, [Fractal image Compression](https://moodle2.brandeis.edu/pluginfile.php/2743626/mod_folder/content/0/1992_Fisher.pdf?attredirects=0), 1992.
 - Fractal compression is a lossy compression method for digical images based on fractals. The method is best suited for textuals & natural images, relying on the fact that parts of an image often resemble other parts of the same image. Fractal algorithm convert these part into mathematical data called "fractal code" which are used to recreate encoded image
 
 ## Table of Contents
-- [Fractal Image Compression](#Fractal Image Compression)
+- [Fractal Image Compression](#Fractal Image Compression Introduction)
   - [Background](#Background)
   - [Demo](#Demo)
     - [SVD](#SVD)
-	- [Fractal Image Compression](#Fractal Image Compression)
+    - [Fractal Image Compression](#Fractal Image Compression)
   - [Contributor](#Contributor)
   - [License](#License)
 
@@ -21,13 +21,13 @@
 ## Demo
 
 ### SVD
-![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
+![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)   <br />
 * above: original
-![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
+![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)   <br />
 * above: compressed
 ### Fractal Image Compression
 
-![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
+![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)    <br />
 
 
 > Todo: modify
