@@ -21,21 +21,22 @@
 ## Demo
 
 ### SVD
-- Lena's image (512 * 512)                                                                              <br />
-![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena.jpg)                     <br />
-* above: original                                                                                       <br />
-![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)   <br />
-* above: compressed                                                                                     <br />
+- Lena's image (512 * 512)                                                                                       <br />
+![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena.jpg)                              <br />
+* Above: Original                                                                                                <br />
+![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_200.jpg)   <br />
+* Above: Compressed with # singular value limit 200                                                              <br />
 
 | Sigular Value limit    | Compression Ratio      |  Generated Image                                                                                              |
 | ---------------------- | -----------------------| ------------------------------------------------------------------------------------------------------------- |
-| 200                    | 0.782012939453125      | [Lena 200](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)  |
-| 180                    | 0.7038116455078125     | [Lena 180](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)  |
-| 160                    | 0.6256103515625        | [Lena 160](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)  |
-| 140                    | 0.5474090576171875     | [Lena 140](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)  |
-| 120                    | 0.469207763671875      | [Lena 120](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)  |
-| 100                    | 0.3910064697265625     | [Lena 100](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)  |
+| 200                    | 0.782012939453125      | [Lena 200](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_200.jpg)  |
+| 180                    | 0.7038116455078125     | [Lena 180](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_180.jpg)  |
+| 160                    | 0.6256103515625        | [Lena 160](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_160.jpg)  |
+| 140                    | 0.5474090576171875     | [Lena 140](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_140.jpg)  |
+| 120                    | 0.469207763671875      | [Lena 120](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_120.jpg)  |
+| 100                    | 0.3910064697265625     | [Lena 100](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_100.jpg)  |
 
+As we could see from above, human eyes cannot easily see the difference between the original and the generated image. Moreover, SVD doesn't require large dataset to train. It can be directly used without training.
 
 ### Fractal Image Compression
 
