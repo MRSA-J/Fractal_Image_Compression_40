@@ -21,7 +21,7 @@
 ## Demo
 
 ### SVD
-- Lena's image (512 * 512)
+- Lena's image (512 * 512)                                                                              <br />
 ![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena.jpg)                     <br />
 * above: original                                                                                       <br />
 ![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd_generated_200.jpg)   <br />
