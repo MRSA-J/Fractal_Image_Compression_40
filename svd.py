@@ -1,7 +1,8 @@
 import numpy
 from PIL import Image
-import matplotlib.pyplot as plt # plotting library
+import matplotlib.pyplot as plt
 
+# Defalt width, height for lena image
 IMAGE_WIDTH = 512
 IMAGE_HEIGHT = 512
 
@@ -48,10 +49,11 @@ if __name__ == "__main__":
 
     generated_image = Image.merge("RGB", (img_red, img_green, img_blue))
 
-    # Todo: add legency
     plt.imshow(image)
+    plt.title("Original Image")
     plt.show()
     plt.imshow(generated_image)
+    plt.title("Generated Image using SVD")
     plt.show()
 
     original_size = IMAGE_HEIGHT * IMAGE_WIDTH * 3
