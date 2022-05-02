@@ -2,7 +2,7 @@
 
 
 ### Fractal Image Compression
---
+---
 - Paper: Yuval Fisher, [Fractal image Compression](https://moodle2.brandeis.edu/pluginfile.php/2743626/mod_folder/content/0/1992_Fisher.pdf?attredirects=0), 1992.
 - 
 
