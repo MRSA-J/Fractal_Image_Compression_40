@@ -15,13 +15,16 @@
   - [License](#License)
 
 ## Background
-> The standard methods of image compression come in several varieties. The current most popular methods relies on eliminating high frequency components of the signal by storing only the low frequency Fourier coefficients. Other methods use a "building block" approach, breaking up images into a small number of canonical pieces and storing only a reference to which piece goes where. 
-> Fractals scheme is promoted by M. Barnsley
+> The standard methods of image compression come in several varieties. The current most popular methods relies on eliminating high frequency components of the signal by storing only the low frequency Fourier coefficients. Other methods use a "building block" approach, breaking up images into a small number of canonical pieces and storing only a reference to which piece goes where.  <br />
+- Fractals scheme is promoted by M. Barnsley
 
 ## Demo
 
 ### SVD
 ![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
+* above: original
+![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
+* above: compressed
 ### Fractal Image Compression
 
 ![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
@@ -35,8 +38,8 @@
     - [ ] Support more transformations
 - [x] Autoencoder (VAE)
 - [ ] JPEG
+- [ ] Modify readme
                 
-
                     
 ## Tables
 | Function name | Description                    |
