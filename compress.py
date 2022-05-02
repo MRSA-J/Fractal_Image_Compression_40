@@ -5,197 +5,213 @@ from skimage.color import rgb2gray
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.ndimage as ndimage
+from PIL import Image
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from scipy import ndimage
+from scipy import optimize
+import numpy as np
+import math
 
+MONKEY_PATH = 'data/monkey.jpg'
+LENA_PATH = 'data/lena.jpg'
 
 '''
 Author: Chen Wei & Lin Yu
-- Code modified from:
-
+- Code modified from: https://github.com/pvigier/fractal-image-compression
 '''
-angles = [0, 90, 180, 270]
+
+# Parameters
+
 directions = [1, -1]
+angles = [0, 90, 180, 270, 360]
+candidates = [[direction, angle] for direction in directions for angle in angles]
 
 
-def rotation(block, angle):
-    return transform.rotate(block, angle)
+def get_greyscale_image(img):
+    return np.mean(img[:, :, :2], 2)
 
 
-def reflection(block, direction):
-    return block[::direction, :]
+def extract_rgb(img):
+    R = img[:, :, 0]
+    G = img[:, :, 1]
+    B = img[:, :, 2]
+
+    return R, G, B
 
 
-def down_sample(block, factor):
-    return transform.downscale_local_mean(block, (factor, factor))
+def merge_rbg(img_red, img_green, img_blue):
+    shape = (img_red.shape[0], img_red.shape[1], 1)
+    return np.concatenate((np.reshape(img_red, shape), np.reshape(img_green, shape),
+                            np.reshape(img_blue, shape)), axis=2)
+ #   return np.array(Image.merge("RGB", (img_red, img_green, img_blue)))
 
 
-def apply_transforms(block, angle, direction):
-    return rotation(reflection(block, direction), angle)
+# Transformations
+def reduce(img, factor):
+    result = np.zeros((img.shape[0] // factor, img.shape[1] // factor))
+    for idx in range(result.shape[0]):
+        for idy in range(result.shape[1]):
+            result[idx, idy] = np.mean(img[idx * factor:(idx + 1) * factor, idy * factor:(idy + 1) * factor])
+    return result
+
+def flip(img, direction):
+    return img[::direction, :]
+
+def rotate(img, angle):
+    return ndimage.rotate(img, angle, reshape=False)
 
 
-def apply_contrat_transforms(block, angle, direction, contrast, brightness):
-    return contrast * rotation(reflection(block, direction), angle) + brightness
+def apply_transformation(img, direction, angle, contrast=1.0, brightness=0.0):
+    return contrast * rotate(flip(img, direction), angle) + brightness
 
 
-def fit_contrast_brightness(block1, block2):
-    A = np.c_[np.ones(block2.size), block2.reshape(block2.size)]
-    b = block1.reshape(block1.size)
-    x, residuals, rank, s = np.linalg.lstsq(A, b)
+# Contrast and brightness
+def find_contrast_and_brightness1(D, S):
+    # Fix the contrast and only fit the brightness
+    contrast = 0.75
+    brightness = (np.sum(D - contrast * S)) / D.size
+    return contrast, brightness
+
+
+def find_contrast_and_brightness2(D, S):
+    # Fit the contrast and the brightness
+    A = np.concatenate((np.ones((S.size, 1)), np.reshape(S, (S.size, 1))), axis=1)
+    b = np.reshape(D, (D.size,))
+    x, _, _, _ = np.linalg.lstsq(A, b)
+    # x = optimize.lsq_linear(A, b, [(-np.inf, -2.0), (np.inf, 2.0)]).x
     return x[1], x[0]
 
 
-def get_transformed_blocks(img, region_size, domaine_size):
-    transformed_blocks = list()
-    factor = domaine_size // region_size
-    for i in range(len(img) // domaine_size + 1):
-        for j in range(len(img) // domaine_size + 1):
-            for direction, angle in [(direction, angle) for direction in directions for angle in angles]:
-                block = img[i * region_size:i * region_size + domaine_size,
-                        j * region_size:j * region_size + domaine_size]
-                transformed_blocks.append(
-                    [i, j, angle, direction, apply_transforms(down_sample(block, factor), angle, direction)])
+# Compression for greyscale images
+def generate_all_transformed_blocks(img, source_size, destination_size, step):
+    factor = source_size // destination_size
+    transformed_blocks = []
+    for k in range((img.shape[0] - source_size) // step + 1):
+        for l in range((img.shape[1] - source_size) // step + 1):
+            # Extract the source block and reduce it to the shape of a destination block
+            S = reduce(img[k * step:k * step + source_size, l * step:l * step + source_size], factor)
+            # Generate all possible transformed blocks
+            for direction, angle in candidates:
+                transformed_blocks.append((k, l, direction, angle, apply_transformation(S, direction, angle)))
     return transformed_blocks
 
 
-def compress(img, region_size, domaine_size, to_csv=False, name="Save.csv"):
-    transformed_blocks = get_transformed_blocks(img, region_size, domaine_size)
-
-    transforms = [[None for k in range(len(img) // region_size)] for j in range(len(img) // region_size)]
-    c = 0
-    for i in range(len(img) // region_size):
-        for j in range(len(img) // region_size):
-            if c % 64 == 0:
-                print("Step {}/{}".format(c + 1, len(img) // region_size * len(img) // region_size))
-            min_ms = np.inf
-            for k, l, angle, direction, transformed_block in transformed_blocks:
-                domaine = transformed_block
-                region = img[i * region_size:(i + 1) * region_size, j * region_size:(j + 1) * region_size]
-                contrast, brightness = fit_contrast_brightness(region, domaine)
-                ms_diff = np.sum(np.square(contrast * domaine + brightness - region))
-                if ms_diff < min_ms:
-                    min_ms = ms_diff
-                    i_, j_, angle_, direction_, contrast_, brightness_ = k, l, angle, direction, contrast, brightness
-            transforms[i][j] = [i_, j_, angle_, direction_, contrast_, brightness_]
-            c += 1
-    return transforms
-
-
-def decompress(transformations, region_size, domaine_size, img_size, nbr_iter, save_every=2, name="name",
-               save_fig=False):
-    current_image = np.random.rand(img_size[0], img_size[1])
-    factor = domaine_size // region_size
-    checkpoints = list()
-    for it in range(nbr_iter):
-        if save_fig:
-            checkpoints.append(current_image)
-            plt.imshow(current_image, cmap="gray")
-            plt.savefig("{}{}.png".format(name, it))
-        print("Step {}/{}".format(it + 1, nbr_iter))
-        for i in range(img_size[0] // region_size):
-            for j in range(img_size[0] // region_size):
-                k, l, angle, direction, contrast, brightness = transformations[i][j]
-                domaine = down_sample(current_image[k * region_size:k * region_size + domaine_size,
-                                      l * region_size:l * region_size + domaine_size], factor)
-                block = apply_contrat_transforms(domaine, angle, direction, contrast, brightness)
-                current_image[i * region_size:(i + 1) * region_size, j * region_size:(j + 1) * region_size] = block
-    return current_image
+def compress(img, source_size, destination_size, step):
+    transformations = []
+    transformed_blocks = generate_all_transformed_blocks(img, source_size, destination_size, step)
+    i_count = img.shape[0] // destination_size
+    j_count = img.shape[1] // destination_size
+    for i in range(i_count):
+        transformations.append([])
+        for j in range(j_count):
+            print("{}/{} ; {}/{}".format(i, i_count, j, j_count))
+            transformations[i].append(None)
+            min_d = float('inf')
+            # Extract the destination block
+            D = img[i * destination_size:(i + 1) * destination_size, j * destination_size:(j + 1) * destination_size]
+            # Test all possible transformations and take the best one
+            for k, l, direction, angle, S in transformed_blocks:
+                contrast, brightness = find_contrast_and_brightness2(D, S)
+                S = contrast * S + brightness
+                d = np.sum(np.square(D - S))
+                if d < min_d:
+                    min_d = d
+                    transformations[i][j] = (k, l, direction, angle, contrast, brightness)
+    return transformations
 
 
-def test_compress():
-    # img = rgb2gray(data.astronaut())
-    img = skimage.io.imread("monkey.gif", as_grey=True)
-    img = down_sample(img, 2)
-    plt.imshow(img, cmap="gray")
-    plt.show()
-    print(img.shape)
-    b = compress(img, 4, 8)
-    print("-- Image compressed")
-    img_dec = decompress(b, 4, 8, img.shape, 8, name="astronaut", save_fig=True)
-    print("-- Image decompressed")
-    plt.imshow(img_dec, cmap="gray")
-    plt.show()
-    return img_dec
+def decompress(transformations, source_size, destination_size, step, nb_iter=8):
+    factor = source_size // destination_size
+    height = len(transformations) * destination_size
+    width = len(transformations[0]) * destination_size
+    iterations = [np.random.randint(0, 256, (height, width))]
+    cur_img = np.zeros((height, width))
+    for i_iter in range(nb_iter):
+        print(i_iter)
+        for i in range(len(transformations)):
+            for j in range(len(transformations[i])):
+                # Apply transform
+                k, l, flip, angle, contrast, brightness = transformations[i][j]
+                S = reduce(iterations[-1][k * step:k * step + source_size, l * step:l * step + source_size], factor)
+                D = apply_transformation(S, flip, angle, contrast, brightness)
+                cur_img[i * destination_size:(i + 1) * destination_size,
+                j * destination_size:(j + 1) * destination_size] = D
+        iterations.append(cur_img)
+        cur_img = np.zeros((height, width))
+    return iterations
 
 
-def compute_PSNR(nbr_step):
-    ref = down_sample(skimage.io.imread("monkey.gif", as_grey=True), 4)
-    psnr = list()
-    init_region = 2
-    init_domaine = 64
-    for k in range(nbr_step):
-        print("Compressing image with {} domaine size - {} region size".format(init_domaine // (2 ** k), init_region))
-        transforms = compress(ref, init_region, init_domaine // (2 ** k))
-        print("Decompressing image")
-        img_dec = decompress(transforms, init_region, init_domaine // (2 ** k), ref.shape, 8)
-        EQM_ = np.mean(np.sum(np.square(ref - img_dec)))
-        psnr_ = (10 / np.log(10)) * np.log(255 ** 2 / EQM_)
-        psnr.append(psnr_)
-    psnr_2 = list()
-    init_region = 8
-    for k in range(nbr_step):
-        print("Compressing image with {} domaine size - {} region size".format(init_domaine // (2 ** 2),
-                                                                               init_region // (2 ** k)))
-        transforms = compress(ref, init_region // (2 ** k), init_domaine // (2 ** 2))
-        print("Decompressing image")
-        img_dec = decompress(transforms, init_region // (2 ** k), init_domaine // (2 ** 2), ref.shape, 8)
-        EQM_ = np.mean(np.sum(np.square(ref - img_dec)))
-        psnr_2_ = (10 / np.log(10)) * np.log(255 ** 2 / EQM_)
-        psnr_2.append(psnr_2_)
+# Compression for color images
+def reduce_rgb(img, factor):
+    img_red, img_green, img_blue = extract_rgb(img)
+    img_red = reduce(img_red, factor)
+    img_green = reduce(img_green, factor)
+    img_blue = reduce(img_blue, factor)
+    return merge_rbg(img_red, img_green, img_blue)
+
+
+def compress_rgb(img, source_size, destination_size, step):
+    img_red, img_green, img_blue = extract_rgb(img)
+    return [compress(img_red, source_size, destination_size, step), \
+            compress(img_green, source_size, destination_size, step), \
+            compress(img_blue, source_size, destination_size, step)]
+
+
+def decompress_rgb(transformations, source_size, destination_size, step, nb_iter=8):
+    img_red = decompress(transformations[0], source_size, destination_size, step, nb_iter)[-1]
+    img_green = decompress(transformations[1], source_size, destination_size, step, nb_iter)[-1]
+    img_blue = decompress(transformations[2], source_size, destination_size, step, nb_iter)[-1]
+    return merge_rbg(img_red, img_green, img_blue)
+
+
+# Plot
+
+def plot_iterations(iterations, target=None):
+    # Configure plot
     plt.figure()
-    plt.plot([init_domaine // (2 ** k) for k in range(nbr_step)], psnr, marker='x', linestyle="--", label="psnr")
-    plt.title("PSNR vs Domain Size")
-    plt.xlabel("Domain Size")
-    plt.ylabel("PSNR")
-    plt.legend()
-    plt.plot([init_domaine // (2 ** k) for k in range(nbr_step)], psnr_2, marker='x', linestyle="--", label="psnr",
-             color="r")
-    plt.savefig("error_rate_3.png")
-    plt.show()
-    return psnr
+    nb_row = math.ceil(np.sqrt(len(iterations)))
+    nb_cols = nb_row
+    # Plot
+    for i, img in enumerate(iterations):
+        plt.subplot(nb_row, nb_cols, i + 1)
+        plt.imshow(img, cmap='gray', vmin=0, vmax=255, interpolation='none')
+        if target is None:
+            plt.title(str(i))
+        else:
+            # Display the RMSE
+            plt.title(str(i) + ' (' + '{0:.2f}'.format(np.sqrt(np.mean(np.square(target - img)))) + ')')
+        frame = plt.gca()
+        frame.axes.get_xaxis().set_visible(False)
+        frame.axes.get_yaxis().set_visible(False)
+    plt.tight_layout()
 
-
-def compute_SSIM(nbr_step):
-    ref = down_sample(skimage.io.imread("monkey.gif", as_grey=True), 4)
-    print(ref.shape)
-    SSIM = list()
-    init_region = 4
-    init_domaine = 64
-    c1 = (0.01 * 255) ** 2
-    c2 = (0.03 * 255) ** 2
-    c3 = c2 / 2
-    for k in range(nbr_step):
-        print("Compressing image with {} domaine size - {} region size".format(init_domaine // (2 ** k), init_region))
-        transforms = compress(ref, init_region, init_domaine // (2 ** k))
-        print("Decompressing image")
-        img_dec = decompress(transforms, init_region, init_domaine // (2 ** k), ref.shape, 8)
-        print(img_dec.shape)
-        SSIM_ = list()
-        for l in range(img_dec.shape[0] // 8):
-            for j in range(img_dec.shape[0] // 8):
-                x, y = ref[8 * k:8 * (k + 1), 8 * j:8 * (j + 1)], img_dec[8 * k:8 * (k + 1), 8 * j:8 * (j + 1)]
-                mux = np.mean(x)
-                muy = np.mean(y)
-                sigx = np.std(x)
-                sigy = np.std(y)
-                cov = np.cov(x, y)
-                l = (2 * mux * muy + c1) / (mux ** 2 + muy ** 2 + c1)
-                c = (2 * sigx * sigy + c2) / (sigx ** 2 + sigy ** 2 + c2)
-                s = (cov + c3) / (sigx * sigy + c3)
-
-                SSIM_.append(l * c * s)
-        SSIM.append(np.mean(SSIM_))
-        print(len(SSIM_))
-        print(np.mean(SSIM_))
-        plt.imshow(img_dec, cmap="gray", interpolation=None)
-        plt.savefig("monkey{}-{}.png".format(init_domaine // (2 ** k), init_region))
+# cannot calculate the compression ratio actually
+def train_greyscale(img_path):
+    img = mpimg.imread(img_path)
+    img = get_greyscale_image(img)
+    img = reduce(img, 4)
     plt.figure()
-    plt.plot([init_domaine // (2 ** k) for k in range(nbr_step)], SSIM, marker='x', linestyle="--", label="SSIM")
-    plt.xticks([init_domaine // (2 ** k) for k in range(nbr_step)])
-    plt.title("SSIM vs Domain Size")
-    plt.xlabel("Domain Size")
-    plt.ylabel("SSIM")
-    plt.legend()
-    plt.savefig("error_SSIM5.png")
+    plt.imshow(img, cmap='gray', interpolation='none')
+    transformations = compress(img, 8, 4, 8)
+    iterations = decompress(transformations, 8, 4, 8)
+    plot_iterations(iterations, img)
+    plt.show()
+
+# cannot calculate the compression ratio actually
+def train_rgb(img_path):
+    img = mpimg.imread(img_path)
+    img = reduce_rgb(img, 8)
+    transformations = compress_rgb(img, 8, 4, 8)
+    retrieved_img = decompress_rgb(transformations, 8, 4, 8)
+    plt.figure()
+    plt.subplot(121)
+    plt.imshow(np.array(img).astype(np.uint8), interpolation='none')
+    plt.subplot(122)
+    plt.imshow(retrieved_img.astype(np.uint8), interpolation='none')
     plt.show()
 
 
-compute_SSIM(4)
+if __name__ == '__main__':
+   # train_greyscale(MONKEY_PATH)
+    train_rgb(LENA_PATH)

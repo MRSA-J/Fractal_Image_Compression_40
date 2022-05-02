@@ -15,7 +15,7 @@ import torch.optim as optim
 
 '''
 # @Author: Chen Wei
-# - Code modified from tutorial: https://medium.com/dataseries/variational-autoencoder-with-pytorch-2d359cbf027b
+# - Code modified from tutorial & my own other research project: https://medium.com/dataseries/variational-autoencoder-with-pytorch-2d359cbf027b
 # - Idea: This is an VAE trained on MNIST, which can also performs image compression.
 # - Disclaimer: the reason I use MNIST as dataset is that we don't need to collect extra data, the disadvantage of this
 # is the dimension of the layers of CNN need to be modified if we wants to perform the vae we trained to reconstruct a 
@@ -292,4 +292,4 @@ if __name__ == "__main__":
     # Evalutate
     vae.load_state_dict(torch.load("model/vae_mnist.pth"))
    # plot_latent(vae.encoder, vae.decoder, n=10)
-   # Todo: modify it so it can plot latent
+   # Todo: modify it so it can plot latent, hard, as cannot separate encoder & decoder after loading weight

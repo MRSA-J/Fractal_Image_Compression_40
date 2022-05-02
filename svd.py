@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 # Defalt width, height for lena image
 IMAGE_WIDTH = 512
 IMAGE_HEIGHT = 512
+SINGULAR_VALUE_LIMIT = 160   # number of singular values to use for reconstructing the compressed image
+
+MONKEY_PATH = 'data/monkey.jpg'
+LENA_PATH = 'data/lena.jpg'
 
 '''
 # @Author: Chen Wei
@@ -13,7 +17,7 @@ IMAGE_HEIGHT = 512
 # - Although not being part of the fractal image compression, the reason why I include SVD here is that we could do some 
 # comparison based on different model
 '''
-def rgb_image(image_path):
+def extract_rgb(image_path):
     image = Image.open(image_path)
     image_arr = numpy.array(image)
     R = image_arr[:, :, 0]
@@ -31,17 +35,14 @@ def compress_single_channel(channel, limit):  #limit - singular value limit
     compressed = inner.astype('uint8')
     return compressed
 
-
-if __name__ == "__main__":
+# PS: THIS IS FOR RGB ONLY
+def svd_image_demo(image_path, limit):
     print('SVD image compression')
-    R, G, B, image = rgb_image('data/lena.jpg')
+    R, G, B, image = extract_rgb(image_path)
 
-    # number of singular values to use for reconstructing the compressed image
-    singular_limit = 160
-
-    R_Compressed = compress_single_channel(R, singular_limit)
-    G_Compressed = compress_single_channel(G, singular_limit)
-    B_Compressed = compress_single_channel(B, singular_limit)
+    R_Compressed = compress_single_channel(R, limit)
+    G_Compressed = compress_single_channel(G, limit)
+    B_Compressed = compress_single_channel(B, limit)
 
     img_red = Image.fromarray(R_Compressed, mode=None)
     img_green = Image.fromarray(G_Compressed, mode=None)
@@ -56,11 +57,29 @@ if __name__ == "__main__":
     plt.title("Generated Image using SVD")
     plt.show()
 
-    original_size = IMAGE_HEIGHT * IMAGE_WIDTH * 3
-    compressed_size = singular_limit * (1 + IMAGE_HEIGHT + IMAGE_WIDTH) * 3
+   # if len(image.size) == 3:
+    original_size = image.size[0] * image.size[1] * image.size[2]
+    compressed_size = limit * (1 + image.size[0] + image.size[1]) * image.size[2]
+    # else:  #grey_scaled
+    #     original_size = image.size[0] * image.size[1]
+    #     compressed_size = limit * (1 + image.size[0] + image.size[1])
     ratio = compressed_size / original_size * 1.0
 
-    print('original size:', original_size)
-    print('compressed size:', compressed_size)
+    print("Image orginal dimension:", image.size)
+    print("Compressed image dimension:", generated_image.size)
+
+    print('Original size:', original_size)
+    print('Compressed size:', compressed_size)
     print('Ratio compressed size / original size:', ratio)
+
+def svd_grey_scaled_demo(image_path, limit):
+    print("Have not implemented yet")
+    # Todo: Implement this one
+
+if __name__ == "__main__":
+    svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
+  #  svd_image_grey_scaled_demo(MONKEY_PATH, SINGULAR_VALUE_LIMIT)
+
+
+
 
