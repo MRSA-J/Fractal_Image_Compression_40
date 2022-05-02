@@ -51,9 +51,7 @@
 
 ## Contributor
 
-- Code：   
-[@ChenWei](https://github.com/MRSA-J)
-[@LinYu](https://github.com/linyu26)
+- Code：   [@ChenWei](https://github.com/MRSA-J)  [@LinYu](https://github.com/linyu26)
 
 
 ## License
