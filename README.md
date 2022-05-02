@@ -36,7 +36,7 @@
 | 120                    | 0.469207763671875      | [Lena 120](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_120.jpg)  |
 | 100                    | 0.3910064697265625     | [Lena 100](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_100.jpg)  |
 
-- As we could see from above, human eyes cannot easily see the difference between the original and the generated image. Moreover, SVD doesn't require large dataset to train. It can be directly used without training.
+As we could see from above, human eyes cannot easily see the difference between the original and the generated image. Moreover, SVD doesn't require large dataset to train. It can be directly used without training.
 
 ### Fractal Image Compression
 
