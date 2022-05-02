@@ -17,8 +17,8 @@ MONKEY_PATH = 'data/monkey.jpg'
 LENA_PATH = 'data/lena.jpg'
 
 '''
-Author: Chen Wei & Lin Yu
-- Code modified from: https://github.com/pvigier/fractal-image-compression
+# @ Author: Chen Wei
+# - Code modified from: https://github.com/pvigier/fractal-image-compression
 '''
 
 # Parameters

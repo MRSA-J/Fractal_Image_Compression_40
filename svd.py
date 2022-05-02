@@ -1,13 +1,14 @@
 import numpy
 from PIL import Image
 import matplotlib.pyplot as plt
-from collections import deque
+import math
+import numpy as np
 import os
 
-# Defalt width, height for lena image
+# Default width, height for lena image
 IMAGE_WIDTH = 512
 IMAGE_HEIGHT = 512
-SINGULAR_VALUE_LIMIT_LIST = [200, 180, 160, 140, 120, 100] # number of singular values to use for reconstructing the compressed image
+SINGULAR_VALUE_LIMIT_LIST = [200, 180, 160, 140, 120, 100]  # number of singular values to use for reconstructing the compressed image
 
 MONKEY_PATH = 'data/monkey.jpg'
 LENA_PATH = 'data/lena.jpg'
@@ -19,10 +20,16 @@ LENA_PATH = 'data/lena.jpg'
 # - Idea: Doing SVD on each channel separately, and merge them together
 # - Although not being part of the fractal image compression, the reason why I include SVD here is that we could do some 
 # comparison based on different model
+# - Implementation note:
+# * 1. Add SINGULAR_VALUE_LIMIT_LIST & lena experiment, which can loop through #singular value limit and generated results
+# * 2. Save the result file & add some visualization to see the SVD performance more straightforward
 '''
 def extract_rgb(image_path):
     image = Image.open(image_path)
     image_arr = numpy.array(image)
+    # grey scaled image
+    if len(image_arr.shape) <3:
+        return [image_arr, image_arr, image_arr, image]
     R = image_arr[:, :, 0]
     G = image_arr[:, :, 1]
     B = image_arr[:, :, 2]
@@ -42,6 +49,7 @@ def compress_single_channel(channel, limit):  #limit - singular value limit
 def svd_image_demo(image_path, limit):
     print('SVD image compression')
     R, G, B, image = extract_rgb(image_path)
+    image_arr = numpy.array(image)
 
     R_Compressed = compress_single_channel(R, limit)
     G_Compressed = compress_single_channel(G, limit)
@@ -54,18 +62,19 @@ def svd_image_demo(image_path, limit):
     generated_image = Image.merge("RGB", (img_red, img_green, img_blue))
 
     plt.imshow(image)
-    plt.title("Original Image")
-    plt.show()
+    # plt.title("Original Image")
+    # plt.show()
     plt.imshow(generated_image)
-    plt.title("Generated Image using SVD")
+    plt.title("Generated Image using SVD with limit:" + str(limit))
     plt.show()
 
-    # if len(image.size) == 3:
-    original_size = image.size[0] * image.size[1] * 3
-    compressed_size = limit * (1 + image.size[0] + image.size[1]) * 3
-    # else:  #grey_scaled, cannot (cuz only RGB image can extract_rgb)
-    #     original_size = image.size[0] * image.size[1]
-    #     compressed_size = limit * (1 + image.size[0] + image.size[1])
+    # RGB
+    if len(image_arr.shape) == 3:
+        original_size = image.size[0] * image.size[1] * 3
+        compressed_size = limit * (1 + image.size[0] + image.size[1]) * 3
+    else:  #grey_scaled
+         original_size = image.size[0] * image.size[1]
+         compressed_size = limit * (1 + image.size[0] + image.size[1])
     ratio = compressed_size / original_size * 1.0
 
     print("--------------------------------------")
@@ -78,9 +87,11 @@ def svd_image_demo(image_path, limit):
     print('Ratio compressed size / original size:', ratio)
     return generated_image
 
-def svd_image_grey_scaled_demo(image_path):
-    print("Have not implemented yet")
-    # Todo: Implement this one
+def monkey_experiment():
+    for limit in SINGULAR_VALUE_LIMIT_LIST:
+        svd_lena_generated_image = svd_image_demo(MONKEY_PATH, limit)
+        out_path = os.path.join('data/monkey_svd', f'lena_svd_generated_{limit}.jpg')
+        svd_lena_generated_image.save(out_path)
 
 def lena_experiment():
     for limit in SINGULAR_VALUE_LIMIT_LIST:
@@ -88,10 +99,11 @@ def lena_experiment():
         out_path = os.path.join('data/lena_svd', f'lena_svd_generated_{limit}.jpg')
         svd_lena_generated_image.save(out_path)
 
+
 'data/lena_svd/lena_svd_generated_180.jpg'
 if __name__ == "__main__":
-    lena_experiment()
-    svd_image_grey_scaled_demo(MONKEY_PATH)
+    lena_experiment()     # RGB
+    monkey_experiment()   # Grey scaled
 
 
 
