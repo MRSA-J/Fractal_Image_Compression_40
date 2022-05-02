@@ -15,6 +15,8 @@ LENA_GENERATED_180_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_180.jpg'
 LENA_GENERATED_160_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_160.jpg'
 LENA_GENERATED_140_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_140.jpg'
 LENA_GENERATED_120_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_120.jpg'
+LENA_GENERATED_100_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_100.jpg'
+
 
 '''
 # @Author: Chen Wei
@@ -71,6 +73,8 @@ def svd_image_demo(image_path, limit):
     #     compressed_size = limit * (1 + image.size[0] + image.size[1])
     ratio = compressed_size / original_size * 1.0
 
+    print("--------------------------------------")
+    print("#Singular Value Limit:", limit)
     print("Image orginal dimension:", image.size)
     print("Compressed image dimension:", generated_image.size)
 
@@ -87,17 +91,20 @@ def lena_experiment():
     svd_200_lena_generated_image = svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
     svd_200_lena_generated_image.save(LENA_GENERATED_200_SVD_SAVE_PATH)
 
-    svd_180_lena_generated_image = svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
+    svd_180_lena_generated_image = svd_image_demo(LENA_PATH, 180)
     svd_180_lena_generated_image.save(LENA_GENERATED_180_SVD_SAVE_PATH)
 
-    svd_160_lena_generated_image = svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
+    svd_160_lena_generated_image = svd_image_demo(LENA_PATH, 160)
     svd_160_lena_generated_image.save(LENA_GENERATED_160_SVD_SAVE_PATH)
 
-    svd_140_lena_generated_image = svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
+    svd_140_lena_generated_image = svd_image_demo(LENA_PATH, 140)
     svd_140_lena_generated_image.save(LENA_GENERATED_140_SVD_SAVE_PATH)
 
-    svd_120_lena_generated_image = svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
+    svd_120_lena_generated_image = svd_image_demo(LENA_PATH, 120)
     svd_120_lena_generated_image.save(LENA_GENERATED_120_SVD_SAVE_PATH)
+
+    svd_100_lena_generated_image = svd_image_demo(LENA_PATH, 100)
+    svd_100_lena_generated_image.save(LENA_GENERATED_100_SVD_SAVE_PATH)
 
 
 if __name__ == "__main__":
