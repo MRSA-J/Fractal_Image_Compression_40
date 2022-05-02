@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 # Defalt width, height for lena image
 IMAGE_WIDTH = 512
 IMAGE_HEIGHT = 512
-SINGULAR_VALUE_LIMIT = 160   # number of singular values to use for reconstructing the compressed image
+SINGULAR_VALUE_LIMIT = 200   # number of singular values to use for reconstructing the compressed image
 
 MONKEY_PATH = 'data/monkey.jpg'
 LENA_PATH = 'data/lena.jpg'
+LENA_GENERATED_200_SVD_SAVE_PATH = 'data/lena_svd_generated_200.jpg'  #200 symbolize # singular value limit
 
 '''
 # @Author: Chen Wei
@@ -29,7 +30,7 @@ def extract_rgb(image_path):
 # compress the matrix of a single channel
 def compress_single_channel(channel, limit):  #limit - singular value limit
     U, S, V = numpy.linalg.svd(channel)
-    compressed = numpy.zeros((channel.shape[0], channel.shape[1]))
+ #   compressed = numpy.zeros((channel.shape[0], channel.shape[1]))
     left = numpy.matmul(U[:, 0:limit], numpy.diag(S)[0:limit, 0:limit])
     inner = numpy.matmul(left, V[0:limit, :])
     compressed = inner.astype('uint8')
@@ -56,6 +57,8 @@ def svd_image_demo(image_path, limit):
     plt.imshow(generated_image)
     plt.title("Generated Image using SVD")
     plt.show()
+
+    generated_image.save(LENA_GENERATED_200_SVD_SAVE_PATH)
 
     # if len(image.size) == 3:
     original_size = image.size[0] * image.size[1] * 3
