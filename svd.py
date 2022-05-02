@@ -1,21 +1,16 @@
 import numpy
 from PIL import Image
 import matplotlib.pyplot as plt
+from collections import deque
+import os
 
 # Defalt width, height for lena image
 IMAGE_WIDTH = 512
 IMAGE_HEIGHT = 512
-SINGULAR_VALUE_LIMIT = 200   # number of singular values to use for reconstructing the compressed image
+SINGULAR_VALUE_LIMIT_LIST = [200, 180, 160, 140, 120, 100] # number of singular values to use for reconstructing the compressed image
 
 MONKEY_PATH = 'data/monkey.jpg'
 LENA_PATH = 'data/lena.jpg'
-# Todo: change it to script to make it more concise
-LENA_GENERATED_200_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_200.jpg'  #200 symbolize # singular value limit
-LENA_GENERATED_180_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_180.jpg'
-LENA_GENERATED_160_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_160.jpg'
-LENA_GENERATED_140_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_140.jpg'
-LENA_GENERATED_120_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_120.jpg'
-LENA_GENERATED_100_SVD_SAVE_PATH = 'data/lena_svd/lena_svd_generated_100.jpg'
 
 
 '''
@@ -83,33 +78,20 @@ def svd_image_demo(image_path, limit):
     print('Ratio compressed size / original size:', ratio)
     return generated_image
 
-def svd_image_grey_scaled_demo(image_path, limit):
+def svd_image_grey_scaled_demo(image_path):
     print("Have not implemented yet")
     # Todo: Implement this one
 
 def lena_experiment():
-    svd_200_lena_generated_image = svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
-    svd_200_lena_generated_image.save(LENA_GENERATED_200_SVD_SAVE_PATH)
+    for limit in SINGULAR_VALUE_LIMIT_LIST:
+        svd_lena_generated_image = svd_image_demo(LENA_PATH, limit)
+        out_path = os.path.join('data/lena_svd', f'lena_svd_generated_{limit}.jpg')
+        svd_lena_generated_image.save(out_path)
 
-    svd_180_lena_generated_image = svd_image_demo(LENA_PATH, 180)
-    svd_180_lena_generated_image.save(LENA_GENERATED_180_SVD_SAVE_PATH)
-
-    svd_160_lena_generated_image = svd_image_demo(LENA_PATH, 160)
-    svd_160_lena_generated_image.save(LENA_GENERATED_160_SVD_SAVE_PATH)
-
-    svd_140_lena_generated_image = svd_image_demo(LENA_PATH, 140)
-    svd_140_lena_generated_image.save(LENA_GENERATED_140_SVD_SAVE_PATH)
-
-    svd_120_lena_generated_image = svd_image_demo(LENA_PATH, 120)
-    svd_120_lena_generated_image.save(LENA_GENERATED_120_SVD_SAVE_PATH)
-
-    svd_100_lena_generated_image = svd_image_demo(LENA_PATH, 100)
-    svd_100_lena_generated_image.save(LENA_GENERATED_100_SVD_SAVE_PATH)
-
-
+'data/lena_svd/lena_svd_generated_180.jpg'
 if __name__ == "__main__":
     lena_experiment()
-    svd_image_grey_scaled_demo(MONKEY_PATH, SINGULAR_VALUE_LIMIT)
+    svd_image_grey_scaled_demo(MONKEY_PATH)
 
 
 
