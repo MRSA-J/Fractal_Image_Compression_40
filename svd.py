@@ -35,7 +35,7 @@ def compress_single_channel(channel, limit):  #limit - singular value limit
     compressed = inner.astype('uint8')
     return compressed
 
-# PS: THIS IS FOR RGB ONLY
+# PS: THIS IS FOR RGB ONLY cuz only RGB image can extract_rgb
 def svd_image_demo(image_path, limit):
     print('SVD image compression')
     R, G, B, image = extract_rgb(image_path)
@@ -57,10 +57,10 @@ def svd_image_demo(image_path, limit):
     plt.title("Generated Image using SVD")
     plt.show()
 
-   # if len(image.size) == 3:
-    original_size = image.size[0] * image.size[1] * image.size[2]
-    compressed_size = limit * (1 + image.size[0] + image.size[1]) * image.size[2]
-    # else:  #grey_scaled
+    # if len(image.size) == 3:
+    original_size = image.size[0] * image.size[1] * 3
+    compressed_size = limit * (1 + image.size[0] + image.size[1]) * 3
+    # else:  #grey_scaled, cannot (cuz only RGB image can extract_rgb)
     #     original_size = image.size[0] * image.size[1]
     #     compressed_size = limit * (1 + image.size[0] + image.size[1])
     ratio = compressed_size / original_size * 1.0
@@ -72,13 +72,13 @@ def svd_image_demo(image_path, limit):
     print('Compressed size:', compressed_size)
     print('Ratio compressed size / original size:', ratio)
 
-def svd_grey_scaled_demo(image_path, limit):
+def svd_image_grey_scaled_demo(image_path, limit):
     print("Have not implemented yet")
     # Todo: Implement this one
 
 if __name__ == "__main__":
     svd_image_demo(LENA_PATH, SINGULAR_VALUE_LIMIT)
-  #  svd_image_grey_scaled_demo(MONKEY_PATH, SINGULAR_VALUE_LIMIT)
+    svd_image_grey_scaled_demo(MONKEY_PATH, SINGULAR_VALUE_LIMIT)
 
 
 
