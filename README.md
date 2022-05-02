@@ -6,7 +6,8 @@
 - Fractal compression is a lossy compression method for digical images based on fractals. The method is best suited for textuals & natural images, relying on the fact that parts of an image often resemble other parts of the same image. Fractal algorithm convert these part into mathematical data called "fractal code" which are used to recreate encoded image
 
 ## Table of Contents
-- [Fractal Image Compression](#Fractal Image Compression Introduction)
+- [Math 40 Final Project](#Math_40_Final_Project)
+  - [Fractal Image Compression](#Fractal Image Compression Introduction)
   - [Background](#Background)
   - [Demo](#Demo)
     - [SVD](#SVD)
@@ -22,9 +23,9 @@
 
 ### SVD
 ![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)   <br />
-* above: original
+* above: original                                                                <br />
 ![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)   <br />
-* above: compressed
+* above: compressed                                                              <br />
 ### Fractal Image Compression
 
 ![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)    <br />
