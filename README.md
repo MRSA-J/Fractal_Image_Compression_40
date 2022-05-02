@@ -6,7 +6,6 @@
 - Fractal compression is a lossy compression method for digical images based on fractals. The method is best suited for textuals & natural images, relying on the fact that parts of an image often resemble other parts of the same image. Fractal algorithm convert these part into mathematical data called "fractal code" which are used to recreate encoded image
 
 ## Table of Contents
-- [Math 40 Final Project](#Math_40_Final_Project)
   - [Fractal Image Compression](#Fractal Image Compression Introduction)
   - [Background](#Background)
   - [Demo](#Demo)
