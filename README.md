@@ -80,12 +80,12 @@ The 2 typical methods among all data/image compression methods are:   </br>
 
 </br>
 Difference:   </br>
-1. Dataset     </br>
-- NN network: requires a huge dataset, labeled or unlabeled. Takes long to train.
-- SVD, fractal image compression: Only requires a single image. 
-2. 'Decoding'/reconstruction algorithm  </br>
-- NN network: Compute very quickly using the weight of each layer.
-- SVD, fractal image compression: Use an iterative reconstruction, which is normally computationally expensive.
+- Dataset     </br>
+  - NN network: requires a huge dataset, labeled or unlabeled. Takes long to train.
+  - SVD, fractal image compression: Only requires a single image. 
+- 'Decoding'/reconstruction algorithm  </br>
+  - NN network: Compute very quickly using the weight of each layer.
+  - SVD, fractal image compression: Use an iterative reconstruction, which is normally computationally expensive.
 
 
 ## Function
