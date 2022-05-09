@@ -43,16 +43,15 @@
 
 As we could see from above, human eyes cannot easily see the difference between the original and the generated image. Moreover, SVD doesn't require large dataset to train. It can be directly used without training.    <br />
 
-Also, we could see that the fewer singular value we use, the worse our performance.
+> Also, we could see that the fewer singular value we use, the worse our performance.
 
 
 ### Fractal Image Compression
 - Lena's image (512 * 512) 
 ![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_fractal/lena_fractal_generated.jpg)    <br />
-- Monkeys's image (512 * 512) 
+- Monkeys's image (256 * 256) 
 ![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/monkey_fractal/monkey_fractal_generated.jpg)    <br />
 
-> Todo: modify
 
 ## Feature & Todo List
 - [x] SVD
@@ -64,11 +63,11 @@ Also, we could see that the fewer singular value we use, the worse our performan
                 
                     
 ## Comparison
-| Method                     | Compression Ratio              | Settings & Note                 |
-| -------------------------- | ------------------------------ | ------------------------------- |
-| SVD                        | 0.782012939453125              | singular value limit - 200      |
-| Fractal Image Compression  | Cannot compute                 |                                 |
-| JPEG                       | Not implement yet              | Does not have time to implement |
+| Method                     | Compression Ratio              | Settings & Note                     |
+| -------------------------- | ------------------------------ | ----------------------------------- |
+| SVD                        | 0.782012939453125              | singular value limit - 200          |
+| Fractal Image Compression  | Cannot compute                 |                                     |
+| JPEG                       | Not implement yet              | Does not have time to implement : ( |
 
 
 ## Function
