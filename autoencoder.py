@@ -15,7 +15,7 @@ import torch.optim as optim
 
 '''
 # @Author: Chen Wei
-# - Code modified from tutorial: https://medium.com/dataseries/variational-autoencoder-with-pytorch-2d359cbf027b
+# - Code modified from tutorial & pytorch official doc: https://medium.com/dataseries/variational-autoencoder-with-pytorch-2d359cbf027b
 # - Idea: This is an VAE trained on MNIST, which can also performs image compression.
 # - Disclaimer: the reason I use MNIST as dataset is that we don't need to collect extra data, the disadvantage of this
 # is the dimension of the layers of CNN need to be modified if we wants to perform the vae we trained to reconstruct a 
@@ -182,7 +182,7 @@ def test_epoch(vae, device, dataloader):
             x = x.to(device)
             # Encode data
             encoded_data = vae.encoder(x)    #latent dimension
-            #Todo: plot hidden deminsion as ...
+            #Todo: plot hidden dimension as ...
 
             # Decode data
             x_hat = vae(x)
@@ -235,6 +235,7 @@ def eval_image(vae):
 
         fig, ax = plt.subplots(figsize=(20, 8.5))
         show_image(torchvision.utils.make_grid(img_recon.data[:100], 10, 5))
+
         plt.show()
 
 def plot_latent(encoder,decoder,n=10):
@@ -279,15 +280,15 @@ if __name__ == "__main__":
 
     num_epochs = 50
 
-    # Train
-    # for epoch in range(num_epochs):
-    #     train_loss = train_epoch(vae, device, train_loader, optim)
-    #     val_loss = test_epoch(vae, device, valid_loader)
-    #
-    #     print('\n EPOCH {}/{} \t train loss {:.3f} \t val loss {:.3f}'.format(epoch + 1, num_epochs, train_loss,
-    #                                                                           val_loss))
-    #     plot_ae_outputs(vae.encoder, vae.decoder, n=10)
-    # torch.save(vae.state_dict(), "model/vae_mnist.pth")
+    # Train, uncomment to train
+    for epoch in range(num_epochs):
+        train_loss = train_epoch(vae, device, train_loader, optim)
+        val_loss = test_epoch(vae, device, valid_loader)
+
+        print('\n EPOCH {}/{} \t train loss {:.3f} \t val loss {:.3f}'.format(epoch + 1, num_epochs, train_loss,
+                                                                              val_loss))
+        plot_ae_outputs(vae.encoder, vae.decoder, n=10)
+    torch.save(vae.state_dict(), "model/vae_mnist.pth")
 
 
     # Evalutate

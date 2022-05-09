@@ -8,7 +8,7 @@ import os
 # Default width, height for lena image
 IMAGE_WIDTH = 512
 IMAGE_HEIGHT = 512
-SINGULAR_VALUE_LIMIT_LIST = [200, 180, 160, 140, 120, 100]  # number of singular values to use for reconstructing the compressed image
+SINGULAR_VALUE_LIMIT_LIST = [200, 180, 160, 140, 120, 100, 80, 60, 40, 20]  # number of singular values to use for reconstructing the compressed image
 
 MONKEY_PATH = 'data/monkey.jpg'
 LENA_PATH = 'data/lena.jpg'
@@ -20,15 +20,17 @@ LENA_PATH = 'data/lena.jpg'
 # - Idea: Doing SVD on each channel separately, and merge them together
 # - Although not being part of the fractal image compression, the reason why I include SVD here is that we could do some 
 # comparison based on different model
-# - Implementation note:
+# - Implementation note (mine):
 # * 1. Add SINGULAR_VALUE_LIMIT_LIST & lena/monkey experiment, which can loop through #singular value limit and generated results
 # * 2. Save the result file & add some visualization to see the SVD performance more straightforward
+# * 3. Deal with not only color - image, but also grey-image
 '''
 def extract_rgb(image_path):
     image = Image.open(image_path)
     image_arr = numpy.array(image)
     # grey scaled image
     if len(image_arr.shape) <3:
+        # directly copy image to R, G, B channels separately
         return [image_arr, image_arr, image_arr, image]
     R = image_arr[:, :, 0]
     G = image_arr[:, :, 1]
@@ -40,8 +42,15 @@ def extract_rgb(image_path):
 def compress_single_channel(channel, limit):  #limit - singular value limit
     U, S, V = numpy.linalg.svd(channel)
  #   compressed = numpy.zeros((channel.shape[0], channel.shape[1]))
+
+    ############################################
+    # diag_S = numpy.diag(S)
+    # a, b = diag_S.shape
+    # quota = min(limit, a)
+    # left = numpy.matmul(U[:, 0:quota], numpy.diag(S)[0:quota, 0:quota])
     left = numpy.matmul(U[:, 0:limit], numpy.diag(S)[0:limit, 0:limit])
     inner = numpy.matmul(left, V[0:limit, :])
+    #############################################
     compressed = inner.astype('uint8')
     return compressed
 
@@ -62,8 +71,8 @@ def svd_image_demo(image_path, limit):
     generated_image = Image.merge("RGB", (img_red, img_green, img_blue))
 
     plt.imshow(image)
-    # plt.title("Original Image")
-    # plt.show()
+    plt.title("Original Image")
+    plt.show()
     plt.imshow(generated_image)
     plt.title("Generated Image using SVD with limit:" + str(limit))
     plt.show()
@@ -103,9 +112,9 @@ def lena_experiment():
 
 if __name__ == "__main__":
     lena_experiment()     # RGB
-    monkey_experiment()   # Grey scaled
+    #monkey_experiment()   # Grey scaled
 
-    # Todo: add generated image in different settings into a single image
+    # Note: grey_scale image's compression ratio has some error
 
 
 

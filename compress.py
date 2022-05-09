@@ -213,5 +213,5 @@ def train_rgb(img_path):
 
 
 if __name__ == '__main__':
-   # train_greyscale(MONKEY_PATH)
+    train_greyscale(MONKEY_PATH)
     train_rgb(LENA_PATH)
