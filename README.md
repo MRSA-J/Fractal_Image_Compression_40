@@ -47,9 +47,10 @@ Also, we could see that the fewer singular value we use, the worse our performan
 
 
 ### Fractal Image Compression
-
-![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)    <br />
-
+- Lena's image (512 * 512) 
+![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_fractal/lena_fractal_generated.jpg)    <br />
+- Monkeys's image (512 * 512) 
+![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/monkey_fractal/monkey_fractal_generated.jpg)    <br />
 
 > Todo: modify
 
@@ -59,24 +60,25 @@ Also, we could see that the fewer singular value we use, the worse our performan
     - [ ] Support more transformations
 - [x] Autoencoder (VAE)
 - [ ] JPEG
-- [ ] Modify readme
+- [x] Modify readme
                 
                     
 ## Comparison
-| Method                     | Compression Ratio              | Settings & Note                |
-| -------------------------- | ------------------------------ | ------------------------------ |
-| SVD                        | 0.782012939453125              | singular value limit - 200     |
-| Fractal Image Compression  | Cannot compute                 |                                |
-| JPEG                       | Not implement yet              |                                |
+| Method                     | Compression Ratio              | Settings & Note                 |
+| -------------------------- | ------------------------------ | ------------------------------- |
+| SVD                        | 0.782012939453125              | singular value limit - 200      |
+| Fractal Image Compression  | Cannot compute                 |                                 |
+| JPEG                       | Not implement yet              | Does not have time to implement |
 
 
 ## Function
-| Function name | Description                    |
-| ------------- | ------------------------------ |
-| `help()`      | Display the help window.       |
-| `destroy()`   | **Destroy your computer!**     |
+| Function name                      | Description                                |
+| ---------------------------------- | ------------------------------------------ |
+| `python svd.py`                    | SVD methods                                |
+| `python autoencoder.py`            | Auto encoder implementation                |
+| `python fractal_compress.py`       | Fractal Image Compression implementation   |
 
-
+- Make sure you have the required package (pytorch, skimage, scipy, etc) downloaded before you run the project
 
 ## Contributor
 - Code：   [@ChenWei](https://github.com/MRSA-J)  [@LinYu](https://github.com/linyu26)
