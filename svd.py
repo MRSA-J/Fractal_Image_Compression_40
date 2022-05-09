@@ -77,14 +77,14 @@ def svd_image_demo(image_path, limit):
     plt.title("Generated Image using SVD with limit:" + str(limit))
     plt.show()
 
-    # RGB
+    # compressed_size = k×(1+m+n), where m is image.size[0], n is image.size[1]
+    # RGB (actually RGB and grey_scaled cal function is the same)
     if len(image_arr.shape) == 3:
-        original_size = image.size[0] * image.size[1] * 3
-        compressed_size = limit * (1 + image.size[0] + image.size[1]) * 3
+         original_size = image.size[0] * image.size[1] * 3
+         compressed_size = limit * (1 + image.size[0] + image.size[1]) * 3
     else:  #grey_scaled
-        #Todo: solve grey-scaled ratio issue
-         original_size = image.size[0] * image.size[1]
-         compressed_size = limit * (1 + image.size[0] + image.size[1])
+        original_size = image.size[0] * image.size[1]
+        compressed_size = limit * (1 + image.size[0] + image.size[1])
     ratio = compressed_size / original_size * 1.0
 
     print("--------------------------------------")
@@ -112,7 +112,7 @@ def lena_experiment():
 
 if __name__ == "__main__":
     lena_experiment()     # RGB
-    #monkey_experiment()   # Grey scaled
+  #  monkey_experiment()   # Grey scaled
 
     # Note: grey_scale image's compression ratio has some error
 
