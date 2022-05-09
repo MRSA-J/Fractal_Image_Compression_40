@@ -42,7 +42,9 @@
 |  20                    | 0.0782012939453125     | [Lena  20](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_svd/lena_svd_generated_20.jpg)  |
 
 
-As we could see from above, human eyes cannot easily see the difference between the original and the generated image. Moreover, SVD doesn't require large dataset to train. It can be directly used without training.    <br />
+- As we could see from above, human eyes cannot easily see the difference between the original and the generated image when # singular value limit = 200. However, it is very blurry when # singular value limit = 20
+- The more singular value we use, the better our results normally.
+- Moreover, SVD doesn't require large dataset to train. It can be directly used without training.    
 
 > Also, we could see that the fewer singular value we use, the worse our performance.
 
@@ -56,6 +58,8 @@ As we could see from above, human eyes cannot easily see the difference between 
 ### Autoencoder
 - Note: Autoencoder can only be trained on a dataset which contains similar objects. This is because autoencoders learn how to compress the data based on attributes (i.e. correlations between the input feature vector) discovered from data during training. 
 - Trained on MNIST in our code
+- It is a little bit different with image compression, but it is a method which is commonly used for data compression. The latent representations generated in the training can be used for many analyses, and it is similar to PCA. Specifically, when the latent dimension = 2, we could plot the distribution using matplotlib.pyplot and this is really handy.
+- The reason why we include it here is that images are also data, since autoencoders are an important neural network structure in data compression and have a similar structure (encoder, decoder) as fractal image compression. (Although the intuition is quite different).
 
 
 ## Feature & Todo List
@@ -71,14 +75,12 @@ As we could see from above, human eyes cannot easily see the difference between 
 | Method                     | Compression Ratio              | Settings & Note                     |
 | -------------------------- | ------------------------------ | ----------------------------------- |
 | SVD                        | 0.782012939453125              | singular value limit - 200          |
-| Fractal Image Compression  | Cannot compute                 |                                     |
+| Fractal Image Compression  | Cannot compute                 | No specific special setting         |
 | JPEG                       | Not implement yet              | Does not have time to implement : ( |
 
 The 2 typical methods among all data/image compression methods are:   </br>
 - 1. Using the NN network
 - 2. Using some maths methods (i.e. fractal image compression, SVD, PCA, etc). 
-
-
 
 #### Difference:   </br>
 - Dataset     
