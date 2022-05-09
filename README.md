@@ -78,7 +78,8 @@ The 2 typical methods among all data/image compression methods are:   </br>
 - 1. Using the NN network
 - 2. Using some maths methods (i.e. fractal image compression, SVD, PCA, etc). 
 
-</br>
+
+
 Difference:   </br>
 - Dataset     
   - NN network: requires a huge dataset, labeled or unlabeled. Takes long to train.
