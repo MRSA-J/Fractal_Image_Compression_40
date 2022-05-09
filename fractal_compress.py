@@ -18,8 +18,12 @@ MONKEY_PATH = 'data/monkey.jpg'
 LENA_PATH = 'data/lena.jpg'
 
 '''
-# @ Author: Chen Wei
+# @ Author: Chen Wei & Lin Yu
 # - Code modified from: https://github.com/pvigier/fractal-image-compression
+# - Implementation note:
+# 1. Add the generated image save function
+# 2. Doesn't really change much with regard to the original code
+
 '''
 
 # Parameters
@@ -45,7 +49,7 @@ def merge_rbg(img_red, img_green, img_blue):
     shape = (img_red.shape[0], img_red.shape[1], 1)
     return np.concatenate((np.reshape(img_red, shape), np.reshape(img_green, shape),
                             np.reshape(img_blue, shape)), axis=2)
- #   return np.array(Image.merge("RGB", (img_red, img_green, img_blue)))
+  #  return np.array(Image.merge("RGB", (img_red, img_green, img_blue)))
 
 
 # Transformations
@@ -56,9 +60,11 @@ def reduce(img, factor):
             result[idx, idy] = np.mean(img[idx * factor:(idx + 1) * factor, idy * factor:(idy + 1) * factor])
     return result
 
+# flip the image
 def flip(img, direction):
     return img[::direction, :]
 
+# rotate the image
 def rotate(img, angle):
     return ndimage.rotate(img, angle, reshape=False)
 
@@ -209,6 +215,7 @@ def train_rgb(img_path):
     transformations = compress_rgb(img, 8, 4, 8)
     retrieved_img = decompress_rgb(transformations, 8, 4, 8)
     plt.figure()
+
     plt.subplot(121)
     plt.imshow(np.array(img).astype(np.uint8), interpolation='none')
     plt.subplot(122)
@@ -220,5 +227,5 @@ def train_rgb(img_path):
 
 
 if __name__ == '__main__':
-    train_greyscale(MONKEY_PATH)
+   # train_greyscale(MONKEY_PATH)
     train_rgb(LENA_PATH)
