@@ -11,6 +11,7 @@
   - [Demo](#Demo)
     - [SVD](#SVD)
     - [Fractal Image Compression](#Fractal-Image-Compression)
+    - [Autoencoder](#Autoencoder)
   - [Contributor](#Contributor)
   - [License](#License)
 
@@ -52,6 +53,10 @@ As we could see from above, human eyes cannot easily see the difference between 
 - Monkeys's image (256 * 256)                                                                                             <br />
 ![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/monkey_fractal/monkey_fractal_generated.jpg)    <br />
 
+### Autoencoder
+- Note: Autoencoder can only be trained on a dataset which contains similar objects. This is because autoencoders learn how to compress the data based on attributes (i.e. correlations between the input feature vector) discovered from data during training. 
+- Trained on MNIST in our code
+
 
 ## Feature & Todo List
 - [x] SVD
@@ -68,6 +73,19 @@ As we could see from above, human eyes cannot easily see the difference between 
 | SVD                        | 0.782012939453125              | singular value limit - 200          |
 | Fractal Image Compression  | Cannot compute                 |                                     |
 | JPEG                       | Not implement yet              | Does not have time to implement : ( |
+
+The 2 typical methods among all data/image compression methods are:   </br>
+- 1. Using the NN network
+- 2. Using some maths methods (i.e. fractal image compression, SVD, PCA, etc). 
+
+</br>
+Difference:   </br>
+1. Dataset     </br>
+- NN network: requires a huge dataset, labeled or unlabeled. Takes long to train.
+- SVD, fractal image compression: Only requires a single image. 
+2. 'Decoding'/reconstruction algorithm  </br>
+- NN network: Compute very quickly using the weight of each layer.
+- SVD, fractal image compression: Use an iterative reconstruction, which is normally computationally expensive.
 
 
 ## Function
