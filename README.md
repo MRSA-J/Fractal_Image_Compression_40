@@ -80,7 +80,7 @@ The 2 typical methods among all data/image compression methods are:   </br>
 
 
 
-Difference:   </br>
+#### Difference:   </br>
 - Dataset     
   - NN network: requires a huge dataset, labeled or unlabeled. Takes long to train.
   - SVD, fractal image compression: Only requires a single image. 
