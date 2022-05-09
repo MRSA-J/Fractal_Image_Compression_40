@@ -47,9 +47,9 @@ As we could see from above, human eyes cannot easily see the difference between 
 
 
 ### Fractal Image Compression
-- Lena's image (512 * 512) 
-![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_fractal/lena_fractal_generated.jpg)    <br />
-- Monkeys's image (256 * 256)                                                                                         <br />
+- Lena's image (512 * 512)                                                                                                <br /> 
+![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/lena_fractal/lena_fractal_generated.jpg)        <br />
+- Monkeys's image (256 * 256)                                                                                             <br />
 ![](https://github.com/MRSA-J/Fractal_Image_Compression_40/blob/main/data/monkey_fractal/monkey_fractal_generated.jpg)    <br />
 
 
